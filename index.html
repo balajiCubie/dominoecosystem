@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Exponential Growth Engine: An Interactive Business Model</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #292524; /* stone-800 */
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #a16207; /* yellow-600 */
+            border-bottom-color: #a16207; /* yellow-600 */
+        }
+        .section-title {
+            color: #44403c; /* stone-700 */
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .domino-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100px;
+        }
+        .domino {
+            width: 20px;
+            height: 60px;
+            background-color: #ca8a04; /* yellow-500 */
+            margin: 0 5px;
+            border-radius: 4px;
+            transform-origin: bottom left;
+            animation: fall 2s ease-in-out forwards;
+            animation-play-state: paused;
+            opacity: 0;
+        }
+        .domino-container:hover .domino {
+            animation-play-state: running;
+        }
+        @keyframes fall {
+            0% { transform: rotate(0deg); opacity: 0;}
+            10% { opacity: 1; }
+            40% { transform: rotate(90deg); }
+            100% { transform: rotate(90deg); opacity: 1;}
+        }
+        .domino:nth-child(1) { animation-delay: 0s; }
+        .domino:nth-child(2) { animation-delay: 0.2s; }
+        .domino:nth-child(3) { animation-delay: 0.4s; }
+        .domino:nth-child(4) { animation-delay: 0.6s; }
+        .domino:nth-child(5) { animation-delay: 0.8s; }
+
+        .seven-s-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+        .s-element {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #e7e5e4; /* stone-200 */
+            border: 2px solid transparent;
+        }
+        .s-element.active {
+            background-color: #fde047; /* yellow-300 */
+            color: #44403c; /* stone-700 */
+            transform: scale(1.1);
+            border-color: #a16207; /* yellow-600 */
+        }
+        .s-element:hover {
+            transform: scale(1.1);
+        }
+        #s-strategy { top: 0; left: 50%; transform: translateX(-50%); }
+        #s-structure { top: 30%; left: 10%; }
+        #s-systems { top: 30%; right: 10%; }
+        #s-style { bottom: 0; left: 50%; transform: translateX(-50%); }
+        #s-staff { bottom: 30%; left: 10%; }
+        #s-skills { bottom: 30%; right: 10%; }
+        #s-shared-values { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px;}
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-stone-100">
+
+    <header class="bg-stone-100/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-stone-800">Exponential Growth Engine</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#model" class="nav-link">The Model</a>
+                <a href="#framework" class="nav-link">7S Framework</a>
+                <a href="#sustainability" class="nav-link">Sustainability</a>
+                <a href="#implementation" class="nav-link">Implementation</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-stone-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4 space-y-2">
+            <a href="#home" class="block nav-link">Home</a>
+            <a href="#model" class="block nav-link">The Model</a>
+            <a href="#framework" class="block nav-link">7S Framework</a>
+            <a href="#sustainability" class="block nav-link">Sustainability</a>
+            <a href="#implementation" class="block nav-link">Implementation</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="min-h-screen flex items-center bg-white">
+            <div class="container mx-auto px-6 py-12 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold text-stone-800 mb-4">The Exponential Growth Engine</h2>
+                <p class="text-lg md:text-xl text-stone-600 max-w-3xl mx-auto mb-8">A self-sustaining business model leveraging the "domino effect" for exponential impact, aligned with the McKinsey 7S framework for organizational coherence and resilience.</p>
+                <div class="domino-container" title="Hover to see the domino effect">
+                    <div class="domino"></div>
+                    <div class="domino"></div>
+                    <div class="domino"></div>
+                    <div class="domino"></div>
+                    <div class="domino"></div>
+                </div>
+                 <p class="text-sm text-stone-500 mt-4 italic">Hover over the dominoes to trigger the chain reaction.</p>
+            </div>
+        </section>
+
+        <section id="model" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">The Core Model: A Three-Pillar Approach</h2>
+                    <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">This model is built on three interconnected pillars designed to create compounding value and sustained growth. Explore how each pillar contributes to a dynamic, resilient, and continuously evolving enterprise.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-8 rounded-lg shadow-md card">
+                        <div class="text-5xl mb-4 text-yellow-500"> dominoes</div>
+                        <h3 class="text-2xl font-semibold mb-2 text-stone-700">1. The Domino Effect</h3>
+                        <p class="text-stone-600">Strategic actions are designed as catalysts. The success of one initiative directly triggers and fuels the next, creating a self-reinforcing cycle of value and accelerating growth.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md card">
+                        <div class="text-5xl mb-4 text-yellow-500">7S </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-stone-700">2. McKinsey 7S Alignment</h3>
+                        <p class="text-stone-600">Organizational coherence is key. Strategy, Structure, Systems, Shared Values, Style, Staff, and Skills are holistically aligned to ensure the entire organization supports the cascading strategic actions without friction.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md card">
+                        <div class="text-5xl mb-4 text-yellow-500">  Cycle </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-stone-700">3. Self-Sustaining Engine</h3>
+                        <p class="text-stone-600">Momentum is maintained internally through friction reduction, resource regeneration via circular models, and adaptive feedback loops, minimizing reliance on constant external inputs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="framework" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">The McKinsey 7S Framework: Ensuring Coherence</h2>
+                    <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">The 7S framework is a powerful tool for ensuring all parts of your organization work in harmony. Click on each element in the diagram below to understand its role in the domino effect model and see its interdependencies visualized in the chart.</p>
+                </div>
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-12">
+                    <div class="flex-shrink-0">
+                        <div class="seven-s-container">
+                            <div id="s-strategy" class="s-element active">Strategy</div>
+                            <div id="s-structure" class="s-element">Structure</div>
+                            <div id="s-systems" class="s-element">Systems</div>
+                            <div id="s-shared-values" class="s-element">Shared Values</div>
+                            <div id="s-style" class="s-element">Style</div>
+                            <div id="s-staff" class="s-element">Staff</div>
+                            <div id="s-skills" class="s-element">Skills</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow w-full lg:w-1/2">
+                        <div id="s-content" class="bg-stone-50 p-6 rounded-lg min-h-[200px]">
+                            <h3 id="s-content-title" class="text-2xl font-bold text-stone-700 mb-2"></h3>
+                            <p id="s-content-text" class="text-stone-600"></p>
+                        </div>
+                        <div class="mt-8">
+                             <h4 class="text-xl font-semibold text-center text-stone-700 mb-4">Interdependency Visualization</h4>
+                             <div class="chart-container">
+                                <canvas id="sevenSChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sustainability" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">The Self-Sustainable Engine</h2>
+                    <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">For continuous momentum, the model relies on an internal engine that reduces friction, regenerates resources, and adapts to change. Below, explore the key circular economy models that power this engine. Click each card to learn more.</p>
+                </div>
+                <div id="sustainability-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                </div>
+            </div>
+        </section>
+
+        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                         <h3 id="modal-title" class="text-2xl font-bold text-stone-800"></h3>
+                        <button id="modal-close" class="text-stone-500 hover:text-stone-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                    <div id="modal-content" class="mt-4 text-stone-600 space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <section id="implementation" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold section-title">Implementation Roadmap</h2>
+                    <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">Adopting this model requires a structured, phased approach. Follow this 5-step roadmap to integrate the Exponential Growth Engine into your organization, ensuring a smooth and effective transformation.</p>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-stone-300 hidden md:block"></div>
+                    <div id="roadmap-container" class="space-y-12 md:space-y-0">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>Interactive Report: The Exponential Growth Engine</p>
+            <p class="text-sm text-stone-400 mt-2">Designed to bring strategic concepts to life.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const activateNavLink = (link) => {
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                link.classList.add('active');
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    activateNavLink(e.target);
+                    if (mobileMenu.classList.contains('hidden') === false) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const link = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+                        if(link) activateNavLink(link);
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            const sElementsData = {
+                's-strategy': {
+                    title: 'Strategy',
+                    text: "Defines the precise sequence of strategic dominoes and their desired cascading impact. It's the dynamic blueprint for value creation, impacting all other elements by setting the overarching direction and priorities.",
+                    scores: [5, 4, 4, 5, 5, 4, 5]
+                },
+                's-structure': {
+                    title: 'Structure',
+                    text: 'Designed for fluid, cross-functional collaboration to facilitate seamless domino flow and rapid decision-making. Impacts staff roles, workflow efficiency, and decision-making authority.',
+                    scores: [4, 5, 4, 3, 4, 5, 4]
+                },
+                's-systems': {
+                    title: 'Systems',
+                    text: 'Establishes agile, automated operational procedures and workflows to enable smooth, low-friction transitions between sequential strategic actions. Impacts productivity and required competencies.',
+                    scores: [4, 4, 5, 3, 4, 5, 5]
+                },
+                's-shared-values': {
+                    title: 'Shared Values',
+                    text: 'Unifies and motivates the organization towards the common purpose of the domino sequence, fostering collaboration and adaptability. This is the cultural core that impacts leadership, morale, and learning.',
+                    scores: [5, 3, 3, 5, 5, 5, 4]
+                },
+                's-style': {
+                    title: 'Style',
+                    text: 'The leadership approach that initiates, guides, and sustains the domino momentum through transparent communication, empowerment, and a focus on adaptability. Impacts staff autonomy and cultural reinforcement.',
+                    scores: [5, 4, 4, 5, 5, 5, 4]
+                },
+                's-staff': {
+                    title: 'Staff',
+                    text: 'The employees who execute and adapt to the cascading strategic actions. Their capabilities, training, and engagement are crucial for each domino to succeed. Impacts skill development and team dynamics.',
+                    scores: [4, 5, 5, 5, 5, 5, 5]
+                },
+                's-skills': {
+                    title: 'Skills',
+                    text: 'The core competencies within the company that ensure the effective and efficient execution of each strategic domino. Strong skills in data analytics and collaboration are vital.',
+                    scores: [5, 4, 5, 4, 4, 5, 5]
+                }
+            };
+
+            const sElements = document.querySelectorAll('.s-element');
+            const sContentTitle = document.getElementById('s-content-title');
+            const sContentText = document.getElementById('s-content-text');
+            const ctx = document.getElementById('sevenSChart').getContext('2d');
+            let sevenSChart;
+
+            function updateSContent(elementId) {
+                const data = sElementsData[elementId];
+                sContentTitle.textContent = data.title;
+                sContentText.textContent = data.text;
+                sElements.forEach(el => el.classList.remove('active'));
+                document.getElementById(elementId).classList.add('active');
+                updateChart(data.scores, data.title);
+            }
+
+            function updateChart(dataScores, label) {
+                sevenSChart.data.datasets[0].data = dataScores;
+                sevenSChart.data.datasets[0].label = `Impact of ${label}`;
+                sevenSChart.update();
+            }
+
+            sElements.forEach(el => {
+                el.addEventListener('click', () => updateSContent(el.id));
+            });
+
+            sevenSChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Strategy', 'Structure', 'Systems', 'Shared Values', 'Style', 'Staff', 'Skills'],
+                    datasets: [{
+                        label: 'Impact of Strategy',
+                        data: sElementsData['s-strategy'].scores,
+                        backgroundColor: 'rgba(202, 138, 4, 0.2)',
+                        borderColor: 'rgb(202, 138, 4)',
+                        pointBackgroundColor: 'rgb(202, 138, 4)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(202, 138, 4)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: false
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            pointLabels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            updateSContent('s-strategy');
+
+
+            const sustainabilityData = [
+                { title: 'Trash-to-Cash', icon: 'recycle', short: 'Converts end-of-life products into new income sources.', details: 'This model reuses or transforms potential waste into different products, creating value from what would be discarded. For example, UK-based Milk & More reuses glass bottles, and Germany\'s "pfand" system recovers bottles for refilling, generating both ecological and economic value.' },
+                { title: 'Refurbishing', icon: 'wrench', short: 'Gives new life to products by replacing worn-out components.', details: 'This extends a product\'s life by bringing it back to a minimum quality standard. The refurbished item re-enters the market at a lower price, preventing waste and making it accessible to more consumers. Apple\'s refurbished product marketplace is a prime example.' },
+                { title: 'Upcycling', icon: 'arrow-up-cycle', short: 'Transforms non-recyclable waste into higher-value materials.', details: 'This model creates new, desirable products from materials that would otherwise have near-zero value. For example, Pangaea makes high-quality handbags from old soccer balls. It creates economic, social, and environmental value.' },
+                { title: 'As-a-Service', icon: 'users', short: 'Shifts product ownership to the producer, who rents out the service.', details: 'Instead of selling a product, the company rents it out, incentivizing them to design for durability, maintenance, and end-of-life recovery. This creates a continuous income stream and maximizes product utilization.' },
+                { title: 'Sharing Economy', icon: 'share', short: 'Community-based access to resources instead of private ownership.', details: 'This increases the utilization of expensive, underused assets. Examples like Turo for car sharing or construction firms sharing machinery reduce the need for individual purchases, cutting costs and environmental impact.' },
+                { title: 'Circular Inputs', icon: 'leaf', short: 'Uses renewable, recycled, or sustainable materials as inputs.', details: 'This model minimizes waste by making it a valuable asset. For instance, recycling aluminum requires only 5% of the energy needed for primary production, reducing costs and emissions while strengthening supply chain resilience.' },
+                { title: 'Product Use Extension', icon: 'plus-circle', short: 'Designs products for repairability, upgradability, and reusability.', details: 'The goal shifts from selling as many new goods as possible to creating a continuous income stream throughout a product\'s extended lifecycle. This involves designing for longevity and offering repair or remanufacturing services.' },
+                { title: 'Resource Recovery', icon: 'magnet', short: 'Recovers materials and energy from non-functional products.', details: 'This focuses on the final stage of a product\'s life. Trade-in services, like those offered by phone companies, are a prime example. Returned items are either refurbished or stripped for valuable parts and recycled, closing the material loop.' }
+            ];
+
+            const sustainabilityCardsContainer = document.getElementById('sustainability-cards');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const modalClose = document.getElementById('modal-close');
+
+            sustainabilityData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-lg shadow-md card cursor-pointer';
+                card.innerHTML = `
+                    <h3 class="text-xl font-semibold mb-2 text-stone-700">${item.title}</h3>
+                    <p class="text-stone-600">${item.short}</p>
+                `;
+                card.addEventListener('click', () => {
+                    modalTitle.textContent = item.title;
+                    modalContent.innerHTML = `<p>${item.details}</p>`;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                });
+                sustainabilityCardsContainer.appendChild(card);
+            });
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            const roadmapData = [
+                {
+                    step: 1,
+                    title: 'Conduct a Strategic Domino Audit',
+                    text: 'Identify potential "first domino" strategic actions with high catalytic potential. Prioritize initiatives that generate immediate returns and also enable future growth, ensuring the initial investment yields compounding benefits.',
+                },
+                {
+                    step: 2,
+                    title: 'Align with McKinsey 7S',
+                    text: 'Perform a comprehensive 7S assessment to map how each element supports or hinders the domino effect. Address misalignments to ensure all internal components are harmonized to reinforce the strategic cascade.',
+                },
+                {
+                    step: 3,
+                    title: 'Implement Self-Sustaining Mechanisms',
+                    text: 'Integrate circular economy and regenerative principles. Identify opportunities for models like "Trash-to-Cash" or "As-a-Service" to regenerate internal resources. Establish robust feedback loops for continuous learning.',
+                },
+                {
+                    step: 4,
+                    title: 'Cultivate a Learning & Adaptive Culture',
+                    text: 'Invest in developing Peter Senge\'s five disciplines (e.g., Systems Thinking, Shared Vision). Empower employees to experiment, learn from failures, and contribute to collective knowledge, making adaptability a core cultural trait.',
+                },
+                {
+                    step: 5,
+                    title: 'Pilot and Scale Iteratively',
+                    text: 'Begin with a pilot program in a controlled environment. Rigorously gather feedback and refine processes before scaling. Implement a phased rollout, continuously monitoring KPIs and adapting the approach based on real-world outcomes.',
+                }
+            ];
+
+            const roadmapContainer = document.getElementById('roadmap-container');
+            roadmapData.forEach((item, index) => {
+                const isOdd = (index + 1) % 2 !== 0;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `md:flex items-center w-full ${isOdd ? 'md:flex-row-reverse' : ''}`;
+
+                itemDiv.innerHTML = `
+                    <div class="md:w-1/2 flex justify-center">
+                        <div class="w-full md:max-w-md p-6 bg-stone-50 rounded-lg shadow-md card">
+                            <h3 class="text-xl font-bold text-stone-700 mb-2">${item.step}. ${item.title}</h3>
+                            <p class="text-stone-600">${item.text}</p>
+                        </div>
+                    </div>
+                    <div class="relative md:w-1/2 flex justify-center">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="h-full w-0.5 bg-stone-300 md:hidden"></div>
+                            <div class="h-6 w-6 rounded-full bg-yellow-500 shadow-lg z-10"></div>
+                        </div>
+                    </div>
+                `;
+                roadmapContainer.appendChild(itemDiv);
+            });
+        });
+    </script>
+</body>
+</html>
